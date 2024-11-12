@@ -1,13 +1,134 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css"> <!-- linkar com o estilo css-->
-    <link rel="stylesheet" href=""> <!-- linkar com o bootstap-->
-    <title>Calculadora</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .calculator {
+      max-width: 300px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .display {
+      font-size: 2em;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .btn {
+      font-size: 1.5em;
+    }
+  </style>
 </head>
-<body>
-    <h1>Olá, aqui vai ser o nome da calculadora</h1>
+<body class="bg-warning">
+ <h1 class="text-primary">Calculatudo</h1>
+<div class="container">
+  <div class="calculator">
+    <div id="display" class="display bg-light p-2">0</div>
+    <div class="row">
+      <button class="btn btn-secondary col-3" onclick="appendNumber('7')">7</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('8')">8</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('9')">9</button>
+      <button class="btn btn-info col-3" onclick="setOperation('/')">÷</button>
+    </div>
+    <div class="row">
+      <button class="btn btn-secondary col-3" onclick="appendNumber('4')">4</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('5')">5</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('6')">6</button>
+      <button class="btn btn-info col-3" onclick="setOperation('*')">×</button>
+    </div>
+    <div class="row">
+      <button class="btn btn-secondary col-3" onclick="appendNumber('1')">1</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('2')">2</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('3')">3</button>
+      <button class="btn btn-info col-3" onclick="setOperation('-')">−</button>
+    </div>
+    <div class="row">
+      <button class="btn btn-secondary col-3" onclick="appendNumber('0')">0</button>
+      <button class="btn btn-secondary col-3" onclick="appendNumber('.')">.</button>
+      <button class="btn btn-success col-3" onclick="calculate()">=</button>
+      <button class="btn btn-info col-3" onclick="setOperation('+')">+</button>
+    </div>
+    <div class="row mt-2">
+      <button class="btn btn-danger col-6" onclick="clearDisplay()">C</button>
+      <button class="btn btn-dark col-6" onclick="deleteLast()">⌫</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  let display = document.getElementById('display');
+  let currentOperand = '';
+  let previousOperand = '';
+  let operation = undefined;
+
+  function appendNumber(number) {
+    if (number === '.' && currentOperand.includes('.')) return;
+    currentOperand = currentOperand.toString() + number.toString();
+    updateDisplay();
+  }
+
+  function setOperation(op) {
+    if (currentOperand === '') return;
+    if (previousOperand !== '') {
+      calculate();
+    }
+    operation = op;
+    previousOperand = currentOperand;
+    currentOperand = '';
+  }
+
+  function calculate() {
+    let result;
+    const prev = parseFloat(previousOperand);
+    const current = parseFloat(currentOperand);
+    if (isNaN(prev) || isNaN(current)) return;
+
+    switch (operation) {
+      case '+':
+        result = prev + current;
+        break;
+      case '-':
+        result = prev - current;
+        break;
+      case '*':
+        result = prev * current;
+        break;
+      case '/':
+        result = prev / current;
+        break;
+      default:
+        return;
+    }
+    currentOperand = result;
+    operation = undefined;
+    previousOperand = '';
+    updateDisplay();
+  }
+
+  function updateDisplay() {
+    display.innerText = currentOperand || '0';
+  }
+
+  function clearDisplay() {
+    currentOperand = '';
+    previousOperand = '';
+    operation = undefined;
+    updateDisplay();
+  }
+
+  function deleteLast() {
+    currentOperand = currentOperand.toString().slice(0, -1);
+    updateDisplay();
+  }
+</script>
+
 </body>
 </html>
